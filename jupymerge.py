@@ -7,6 +7,8 @@ def find_cell_index(
     cells: List[Dict[str, Any]], cell_id_or_index: Union[str, int]
 ) -> int:
     if isinstance(cell_id_or_index, int):
+        if cell_id_or_index < 0:
+            return len(cells) + cell_id_or_index
         return cell_id_or_index
     return next(
         i for i, cell in enumerate(cells) if cell["metadata"]["id"] == cell_id_or_index
@@ -93,7 +95,7 @@ def extract_cells_from_source(
 def convert_to_int_if_needed(value: Optional[str]) -> Optional[Union[str, int]]:
     if value is None:
         return None
-    return int(value) if value.isdigit() else value
+    return int(value) if value.isdigit() or (value.startswith('-') and value[1:].isdigit()) else value
 
 
 def extract_cells(
